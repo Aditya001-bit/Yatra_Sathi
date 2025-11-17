@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Smart Travel Assistant</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: #f3f5fb;
+  }
+  .card {
+    background: white;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0px 4px 16px rgba(0,0,0,0.08);
+  }
+</style>
+</head>
+<body class="p-6">
+
+<header class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-semibold">📊 Dashboard</h1>
+
+  <nav class="space-x-6 text-lg">
+    <a href="/" class="hover:text-blue-600">Home</a>
+    <a href="/features" class="hover:text-blue-600">Features</a>
+    <a href="/dashboard" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Dashboard</a>
+    <a href="/contact" class="hover:text-blue-600">Contact</a>
+  </nav>
+</header>
+
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+  <!-- ✅ BUDGET TRACKER -->
+  <section class="card col-span-1">
+    <h2 class="font-semibold text-xl mb-4">💰 Budget Tracker</h2>
+
+    <label class="block font-medium">Food (₹)</label>
+    <input id="food" class="w-full border rounded-lg p-2 mb-2" type="number">
+
+    <label class="block font-medium">Travel (₹)</label>
+    <input id="travel" class="w-full border rounded-lg p-2 mb-2" type="number">
+
+    <label class="block font-medium">Stay (₹)</label>
+    <input id="stay" class="w-full border rounded-lg p-2 mb-2" type="number">
+
+    <p id="total" class="font-bold text-lg text-blue-600 mt-3">Total: ₹0</p>
+
+    <button onclick="calculate()" class="bg-blue-600 text-white px-4 py-2 rounded-lg w-full hover:bg-blue-700">
+      Calculate
+    </button>
+  </section>
+
+
+  <!-- ✅ LIVE MAP -->
+  <section class="card col-span-2">
+    <h2 class="font-semibold text-xl mb-4">🗺️ Live Map</h2>
+
+    <iframe class="rounded-xl w-full h-64"
+            src="https://maps.google.com/maps?q=India&t=&z=5&ie=UTF8&iwloc=&output=embed">
+    </iframe>
+  </section>
+
+
+  <!-- ✅ WEATHER -->
+  <section class="card col-span-1">
+    <h2 class="font-semibold text-xl mb-4">🌦 Weather & Festival</h2>
+    <div id="weatherBox" class="p-4 rounded-xl bg-blue-50 text-center">
+      <p class="font-semibold">Location: <span id="w_city">N/A</span></p>
+      <p>Temp: <span id="w_temp">--</span>°C</p>
+      <p>Condition: <span id="w_condition">--</span></p>
+    </div>
+    <a href="/weather" class="mt-3 block text-blue-600 underline text-sm text-center">Open full weather page</a>
+  </section>
+
+
+  <!-- ✅ ANALYTICS (fills empty space) -->
+  <!-- ✅ ANALYTICS (Upgraded Trip Insights) -->
+<section class="card col-span-2">
+  <h2 class="font-semibold text-xl mb-4 text-center">📊 Trip Insights</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+
+    <!-- Chart -->
+    <div class="flex justify-center">
+      <canvas id="budgetChart" class="w-60 h-60"></canvas>
+    </div>
+
+    <!-- Stats Box -->
+    <div class="space-y-3">
+      <div class="p-3 bg-blue-50 rounded-lg">
+        💰 <b>Total Spent:</b> <span id="totalSpent">₹0</span>
+      </div>
+      <div class="p-3 bg-green-50 rounded-lg">
+        🎯 <b>Recommended Daily:</b> <span id="dailyBudget">₹0</span>
+      </div>
+      <div class="p-3 bg-yellow-50 rounded-lg">
+        ⚡ <b>Highest Expense:</b> <span id="highestExpense">-</span>
+      </div>
+      <div class="p-3 bg-purple-50 rounded-lg">
+        🤖 <b>Smart Tip:</b> <span id="budgetTip">Plan your trip budget to see insights</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+  <!-- ✅ PHOTO REVIEWS -->
+  <section class="card col-span-3">
+    <h2 class="font-semibold text-xl mb-4">📸 Photo Reviews</h2>
+
+    <div class="flex gap-3 mb-4">
+      <input type="file" id="photoUpload" accept="image/*">
+      <input type="text" id="reviewText" placeholder="Write review..."
+             class="border rounded-lg p-2 w-full">
+      <button onclick="addReview()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Add</button>
+    </div>
+
+    <div id="reviewGallery" class="grid grid-cols-2 md:grid-cols-4 gap-4 max-h-72 overflow-y-auto">
+      <!-- reviews appear here -->
+    </div>
+  </section>
+
+</div>
+
+
+<!-- 🤖 AI Chatbot Widget
+<div class="fixed bottom-5 right-5 w-80 bg-white shadow-xl rounded-xl p-3 border">
+    <h3 class="text-lg font-semibold mb-2">🤖 AI Trip Assistant</h3>
+    
+    <div id="chatbox" class="h-48 overflow-y-auto bg-gray-100 p-2 rounded text-sm"></div>
+
+    <input id="chatInput" class="w-full border rounded p-2 mt-2" placeholder="Ask: cheap beach trip?">
+
+    <button onclick="sendChat()" class="bg-blue-600 text-white w-full py-2 mt-2 rounded">Send</button>
+</div> -->
+
+
+<script>
+// 
+function calculate() {
+  let f = Number(food.value);
+  let t = Number(travel.value);
+  let s = Number(stay.value);
+  let totalVal = f + t + s;
+
+  total.innerText = `Total: ₹${totalVal}`;
+  totalSpent.innerText = `₹${totalVal}`;
+
+  // Daily estimate (trip for 5 days assumed)
+  let daily = Math.round(totalVal / 5);
+  dailyBudget.innerText = `₹${daily}`;
+
+  // Find highest expense category
+  let highest = Math.max(f, t, s);
+  let category = highest === f ? "Food" : highest === t ? "Travel" : "Stay";
+  highestExpense.innerText = category;
+
+  // Smart Tip
+  if (category === "Stay") {
+    budgetTip.innerText = "Try hostels or budget hotels to save more.";
+  } else if (category === "Travel") {
+    budgetTip.innerText = "Use public transport or early booking for discounts.";
+  } else if (category === "Food") {
+    budgetTip.innerText = "Prefer local food spots over restaurants.";
+  } else {
+    budgetTip.innerText = "Good balance. Keep tracking!";
+  }
+
+  updateChart([f, t, s]);
+}
+
+function addReview() {
+  const file = photoUpload.files[0]
+  const review = reviewText.value
+  if (!file || !review) return alert("Add image + review")
+
+  const reader = new FileReader()
+  reader.onload = e => {
+    const div = document.createElement("div")
+    div.innerHTML = `
+      <img src="${e.target.result}" class="rounded-xl h-32 w-full object-cover">
+      <p class="text-sm mt-1">${review}</p>
+    `
+    reviewGallery.prepend(div)
+  }
+  reader.readAsDataURL(file)
+  reviewText.value = ""
+}
+</script>
+
+
+
+</body>
+</html>

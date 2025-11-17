@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Budget Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<div class="max-w-xl mx-auto mt-10 bg-white shadow-lg rounded-xl p-6">
+  <h2 class="text-2xl font-bold mb-3">💰 Budget Tracker</h2>
+
+  <form id="budgetForm" class="space-y-3">
+    <input type="number" id="amount" placeholder="Amount" class="w-full px-3 py-2 border rounded-lg" required>
+    <input type="text" id="desc" placeholder="Description" class="w-full px-3 py-2 border rounded-lg">
+    <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Add</button>
+  </form>
+
+  <h3 class="text-lg font-semibold mt-5">📌 Expenses</h3>
+  <ul id="list" class="mt-3 space-y-2"></ul>
+</div>
+
+<script>
+document.getElementById("budgetForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const li = document.createElement("li");
+  li.className = "p-3 bg-gray-50 border rounded-lg";
+  li.textContent = `${desc.value} - ₹${amount.value}`;
+  list.appendChild(li);
+  this.reset();
+});
+</script>
+
+</body>
+</html>

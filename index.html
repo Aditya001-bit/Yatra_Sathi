@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Smart Travel Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header class="site-header">
+        <nav class="navbar container">
+            <div class="brand">Smart Travel Assistant</div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-text">
+          <h1>Smart Travel Assistant</h1>
+          <p class="subtitle">Plan. Track. Travel Smart.</p>
+          <a class="btn primary" href="/dashboard">Get Started</a>
+        </div>
+        <div class="hero-visual card">
+          <div class="card-content">
+            <h3>Travel made simple</h3>
+            <p>Minimal UI. Practical features. Designed for quick prototypes and demonstration.</p>
+          </div>
+        </div>
+      </div>
+    </section> -->
+
+
+        <section class="hero">
+            <div class="hero-inner">
+                <div class="hero-text">
+                    <h1>Smart Travel Assistant</h1>
+                    <p class="subtitle">Plan. Track. Travel Smart.</p>
+                    <h3> Unified travel assistance
+                        platform that combines all travel tools
+                        — navigation, budgeting,
+                        communication, and
+                        recommendations — into one easy-touse application.</h3>
+                    <a class="btn primary" href="/dashboard">Get Started</a>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="features" class="container section">
+            <h2 class="section-title">Core Features</h2>
+            <div class="features-grid">
+                <article class="feature card">
+                    <h3><a href="/budget">Budget Tracker</a></h3>
+                    <p>Track daily spend and manage trip costs effectively.</p>
+                </article>
+
+                <article class="feature card">
+                    <h3><a href="/location">Live Location Sharing</a></h3>
+                    <p>Share your real-time location with travel companions.</p>
+                </article>
+
+                <article class="feature card">
+                    <h3><a href="/weather">Weather & Festival Updates</a></h3>
+                    <p>Get weather forecasts and local festival alerts to plan better.</p>
+                </article>
+
+                <article class="feature card">
+                    <h3><a href="/reviews">Photo Reviews & Recommendations</a></h3>
+                    <p>Upload and view photo reviews to guide your choices.</p>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>© <span id="year"></span> Smart Travel Assistant — Mini Project</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+
+
+
+    <!-- Floating Chatbot Button -->
+    <div id="yatra-chat-button">
+        💬
+    </div>
+
+    <!-- Chat Window -->
+    <div id="yatra-chat-window">
+        <div id="yatra-chat-header">
+            <strong>Yatra Saathi</strong>
+            <span id="yatra-close">×</span>
+        </div>
+
+        <div id="yatra-chat-body">
+            <div class="bot-msg">
+                Welcome! I’m **Yatra Saathi**, your travel assistant.
+                Tell me what you need help with👇
+            </div>
+
+            <div id="quick-options">
+                <button class="option-btn">Find Best Destinations</button>
+                <button class="option-btn">Suggest Budget Trips</button>
+                <button class="option-btn">Weekend Getaway</button>
+                <button class="option-btn">Adventure Trips</button>
+            </div>
+        </div>
+
+        <div id="yatra-chat-input">
+            <input type="text" id="userInput" placeholder="Ask me anything about travel..." />
+            <button id="sendBtn">Send</button>
+        </div>
+    </div>
+    <script>
+        const chatButton = document.getElementById("yatra-chat-button");
+        const chatWindow = document.getElementById("yatra-chat-window");
+        const closeBtn = document.getElementById("yatra-close");
+        const sendBtn = document.getElementById("sendBtn");
+        const inputBox = document.getElementById("userInput");
+        const chatBody = document.getElementById("yatra-chat-body");
+
+        chatButton.onclick = () => chatWindow.style.display = "flex";
+        closeBtn.onclick = () => chatWindow.style.display = "none";
+
+        function sendMessage() {
+            let text = inputBox.value.trim();
+            if (!text) return;
+
+            chatBody.innerHTML += `<div class='user-msg'>${text}</div>`;
+            inputBox.value = "";
+
+            setTimeout(() => {
+                chatBody.innerHTML += `<div class='bot-msg'>Let me think... (Later we will connect AI)</div>`;
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 500);
+        }
+
+        sendBtn.onclick = sendMessage;
+        inputBox.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") sendMessage();
+        });
+    </script>
+
+</body>
+
+</html>

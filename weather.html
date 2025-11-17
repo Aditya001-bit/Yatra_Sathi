@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather Update</title>
+
+<!-- TAILWIND CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  body {
+    background: linear-gradient(135deg, #0f172a, #1e293b, #0a0f24);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
+    font-family: "Poppins", sans-serif;
+  }
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+  }
+</style>
+
+</head>
+<body class="flex justify-center items-center h-screen p-4">
+
+  <div class="glass-card w-full max-w-md p-8 rounded-2xl shadow-2xl text-white">
+    
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold tracking-wide flex justify-center gap-2 items-center">
+        ☁️ Weather Dashboard
+      </h1>
+      <p class="text-gray-300 text-sm">Live weather with temp, humidity & wind</p>
+    </div>
+
+    <input id="city"
+      class="w-full p-3 rounded-lg bg-white text-black outline-none font-medium"
+      placeholder="Enter city name">
+
+    <button onclick="getWeather()"
+      class="w-full bg-blue-600 hover:bg-blue-700 transition-all text-white font-semibold py-3 rounded-lg mt-4">
+      Get Weather
+    </button>
+
+    <div id="weatherOutput" class="mt-6"></div>
+
+  </div>
+
+<script>
+  const apiKey = "977c5415a8470f6d852df5cba4989d97";
+
+  async function getWeather() {
+    const city = document.getElementById("city").value.trim();
+    if (!city) return;
+
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.cod === "404") {
+      document.getElementById("weatherOutput").innerHTML =
+        `<p class="text-red-400 text-center font-semibold">❌ City not found</p>`;
+      return;
+    }
+
+    const icon = `https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png`;
+
+    document.getElementById("weatherOutput").innerHTML = `
+      <div class="bg-white text-black p-6 rounded-xl mt-3 text-center shadow-xl">
+        <img src="${icon}" class="w-28 mx-auto mb-2">
+        <h2 class="text-2xl font-semibold">${data.name}</h2>
+
+        <p class="text-xl font-medium">🌡️ ${data.main.temp} °C</p>
+        <p class="text-gray-700 capitalize">${data.weather[0].description}</p>
+
+        <div class="flex justify-between mt-4 text-sm text-blue-800">
+          <span>💧 Humidity: ${data.main.humidity}%</span>
+          <span>🌬️ Wind: ${data.wind.speed} m/s</span>
+        </div>
+      </div>
+    `;
+  }
+</script>
+
+</body>
+</html>
